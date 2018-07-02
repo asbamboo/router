@@ -2,6 +2,7 @@
 namespace asbamboo\router;
 
 use asbamboo\http\ServerRequestInterface;
+use asbamboo\http\ResponseInterface;
 
 /**
  * 路由管理器
@@ -31,4 +32,11 @@ interface RouterInterface
      * @return RouteInterface
      */
     public function getRoute(ServerRequestInterface $request) : RouteInterface;
+
+    /**
+     * 匹配一个request请求, 并且执行路由的callback方法后，返回一个Response信息。
+     *
+     * @param ServerRequestInterface $request
+     */
+    public function matchRequest(ServerRequestInterface $request): ResponseInterface;
 }

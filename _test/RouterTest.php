@@ -38,13 +38,13 @@ class RouterTest extends TestCase
         return $Router;
     }
 
-    /**
-     * @depends testGenerateUrl
-     */
-    public function testGetRoute(Router $Router)
-    {
-        $Request                = new ServerRequest();
-        $Route                  = $Router->getRoute($Request);
-        $this->assertEquals('test_id', $Route->getId());
-    }
+//     /**
+//      * @depends testGenerateUrl
+//      */
+//     public function testGetRoute(Router $Router)
+//     {
+//         $Request                = new ServerRequest();
+//         $Route                  = $Router->getRoute($Request);
+//         $this->assertEquals('test_id', $Route->getId());
+//     }
 }

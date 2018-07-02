@@ -2,6 +2,7 @@
 namespace asbamboo\router;
 
 use asbamboo\http\ServerRequestInterface;
+use asbamboo\http\ResponseInterface;
 
 /**
  * 路由管理器
@@ -84,5 +85,10 @@ class Router implements RouterInterface
     {
         $path               = $request->getUri()->getPath();
         return $this->RouteCollection->getByPath($path);
+    }
+
+    public function matchRequest(ServerRequestInterface $request): ResponseInterface
+    {
+
     }
 }
