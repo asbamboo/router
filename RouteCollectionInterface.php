@@ -1,6 +1,8 @@
 <?php
 namespace asbamboo\router;
 
+use asbamboo\http\ServerRequestInterface;
+
 /**
  * 路由单元的集合[RouterCollection]
  *
@@ -27,13 +29,13 @@ interface RouteCollectionInterface extends \IteratorAggregate, \Countable
     public function get(string $id) : RouteInterface;
 
     /**
-     * 通过请求路径去匹配并且获取路由单元
+     * 通过request请求信息去匹配并且获取路由单元
+     * 返回匹配结果
      *
-     * @param string $path
-     *
-     * @return RouteInterface
+     * @param ServerRequestInterface $request
+     * @return MatchInterface
      */
-    public function getByPath(string $path) : RouteInterface;
+    public function matchRequest(ServerRequestInterface $request) : MatchInterface;
 
     /**
      * 获取唯一标识符为[$id]的路由单元是否存在于路由集合。
@@ -42,12 +44,4 @@ interface RouteCollectionInterface extends \IteratorAggregate, \Countable
      * @return bool
      */
     public function has(string $id) : bool;
-
-    /**
-     * 通过请求路径去匹配路由单元, 判断是否存在于路由集合。
-     *
-     * @param string $path
-     * @return bool
-     */
-    public function hasByPath(string $path) : bool;
 }

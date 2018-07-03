@@ -6,6 +6,8 @@ use asbamboo\router\Route;
 use asbamboo\router\RouteCollection;
 use asbamboo\router\Router;
 use asbamboo\http\ServerRequest;
+use asbamboo\http\Response;
+use asbamboo\http\Stream;
 
 /**
  * test 路由管理器
@@ -24,7 +26,11 @@ class RouterTest extends TestCase
     {
         $id                 = 'test_id';
         $path               = '/path/{p1}/{p2}/{p3}/';
-        $callback           = function($p1, $p2, $p3){};
+        $callback           = function($p1, $p2, $p3){
+            $Body       = new Stream('php://temp', 'w+b');
+            $Body->write('testRouter.');
+            return new Response($Body);
+        };
         $default_params     = ['p1' => '1', 'p2' => '2', 'p3' => '3'];
         $options            = ['custom' => true];
         $Route              = new Route($id, $path, $callback, $default_params, $options);
@@ -38,13 +44,13 @@ class RouterTest extends TestCase
         return $Router;
     }
 
-//     /**
-//      * @depends testGenerateUrl
-//      */
-//     public function testGetRoute(Router $Router)
-//     {
-//         $Request                = new ServerRequest();
-//         $Route                  = $Router->getRoute($Request);
-//         $this->assertEquals('test_id', $Route->getId());
-//     }
+    /**
+     * @depends testGenerateUrl
+     */
+    public function testMatchRequest(Router $Router)
+    {
+        $Request                = new ServerRequest();
+        $Response               = $Router->matchRequest($Request);
+        $this->assertEquals('testRouter.', $Response->getBody());
+    }
 }

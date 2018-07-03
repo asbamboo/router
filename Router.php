@@ -79,16 +79,11 @@ class Router implements RouterInterface
     /**
      *
      * {@inheritDoc}
-     * @see \asbamboo\router\RouterInterface::getRoute()
+     * @see \asbamboo\router\RouterInterface::matchRequest()
      */
-    public function getRoute(ServerRequestInterface $request) : RouteInterface
-    {
-        $path               = $request->getUri()->getPath();
-        return $this->RouteCollection->getByPath($path);
-    }
-
     public function matchRequest(ServerRequestInterface $request): ResponseInterface
     {
-
+        $matchRequest   = $this->RouteCollection->matchRequest($request);
+        return $matchRequest->execute();
     }
 }

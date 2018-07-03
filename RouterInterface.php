@@ -25,15 +25,6 @@ interface RouterInterface
     public function generateUrl(string $route_id, array $params = null) : string;
 
     /**
-     * 获取一个和当前请求匹配的路由
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return RouteInterface
-     */
-    public function getRoute(ServerRequestInterface $request) : RouteInterface;
-
-    /**
      * 匹配一个request请求, 并且执行路由的callback方法后，返回一个Response信息。
      *
      * @param ServerRequestInterface $request

@@ -24,6 +24,6 @@ interface MatchInterface
      * @param mixed ...$params callback方法接受的参数
      * @return ResponseInterface
      */
-    public function execute(...$params): ResponseInterface;
+    public function execute(): ResponseInterface;
 }
 
