@@ -7,6 +7,7 @@ use asbamboo\router\Route;
 
 /**
  * 通过array加载路由集合
+ *
  * @author 李春寅 <licy2013@aliyun.com>
  * @since 2018年3月17日
  */
@@ -22,13 +23,13 @@ class LoaderByArray extends LoaderAbstract
     {
         $RouteCollection    = new RouteCollection();
         foreach($resource AS $item){
-            
+
             // 如果路由是一个calss的method，那么路由可以定义成 class_name:method_name
             if(is_string( $item['callback'] )){
                 $callback           = explode(':', $item['callback']);
                 $item['callback']   = [new $callback[0], $callback[1]];
             }
-            
+
             $Route  = new Route($item['id'], $item['path'], $item['callback'], $item['default_params'] ?? null, $item['options'] ?? null);
             $RouteCollection->add($Route);
         }
