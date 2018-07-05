@@ -12,7 +12,19 @@ use asbamboo\http\ServerRequestInterface;
  */
 class RouteCollection implements RouteCollectionInterface
 {
-    private $routes = [];
+    /**
+     * 路由集合
+     *
+     * @var array
+     */
+    private $routes         = [];
+
+    /**
+     * 当前匹配到的路由
+     *
+     * @var Route
+     */
+    private $MatchedRoute   = null;
 
     /**
      *
@@ -43,21 +55,31 @@ class RouteCollection implements RouteCollectionInterface
      */
     public function matchRequest(ServerRequestInterface $Request) : MatchInterface
     {
-        $MatchRoute = null;
-        $path       = $Request->getUri()->getPath();
+        $path           = $Request->getUri()->getPath();
         foreach($this->routes AS $id => $Route){
             $test_ereg  = '@^' . preg_replace('@\{\w+\}@u', '\w+', $Route->getPath()) . '$@u';
             $path       = rtrim($path, '/');
             if(preg_match($test_ereg, $path)){
-                $MatchRoute = $Route;
+                $this->MatchedRoute = $Route;
             }
         }
 
-        if($MatchRoute === null){
+        if($this->MatchedRoute === null){
             throw new NotFoundRouteException(sprintf("没有找到与路径[%s]匹配的路由", $path));
         }
 
-        return new MatchRequest($MatchRoute, $Request);
+        return new MatchRequest($this->MatchedRoute, $Request);
+    }
+
+    /**
+     * 返回匹配到的路由
+     *  - 当返回结果是null的时候，可能是应为没有执行matchRequest方法
+     *
+     * @return \asbamboo\router\Route
+     */
+    public function getMatchedRoute()
+    {
+        return $this->MatchedRoute;
     }
 
     /**
