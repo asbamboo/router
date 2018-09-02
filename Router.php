@@ -38,8 +38,8 @@ class Router implements RouterInterface
          */
         $Route          = $this->RouteCollection->get($route_id);
         $path           = $Route->getPath();
-        $default_params = $Route->getDefaultParams();
-        $params         = array_merge($default_params, $params);
+        $default_params = (array)$Route->getDefaultParams();
+        $params         = array_merge($default_params, (array)$params);
 
         /*
          * 将url路径中的变量替换
@@ -68,7 +68,7 @@ class Router implements RouterInterface
          * 生成url
          */
         $query_string   = http_build_query($params);
-        $url            = $path . '?' . $query_string;
+        $url            = $path . ( $query_string ? '?' . $query_string : '');
 
         /*
          * 返回
