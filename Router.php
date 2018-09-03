@@ -62,7 +62,7 @@ class Router implements RouterInterface
                 continue;
             }
         }
-        $path           = implode('/', $explode_path);
+        $path           = implode('/', $explode_path)?:'/';
 
         /*
          * 生成url
