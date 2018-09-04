@@ -38,6 +38,14 @@ interface RouteCollectionInterface extends \IteratorAggregate, \Countable
     public function matchRequest(ServerRequestInterface $request) : MatchInterface;
 
     /**
+     * 返回与客户端请求匹配的路由
+     *  - 在执行matchRequest方法后getMatchedRoute有值，在此之前返回null
+     *
+     * @return RouteInterface
+     */
+    public function getMatchedRoute() : ?RouteInterface;
+
+    /**
      * 获取唯一标识符为[$id]的路由单元是否存在于路由集合。
      *
      * @param string $id

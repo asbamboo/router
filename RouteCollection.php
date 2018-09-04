@@ -77,7 +77,7 @@ class RouteCollection implements RouteCollectionInterface
      *
      * @return \asbamboo\router\Route
      */
-    public function getMatchedRoute()
+    public function getMatchedRoute() : ?RouteInterface
     {
         return $this->MatchedRoute;
     }
