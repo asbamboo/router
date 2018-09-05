@@ -9,5 +9,8 @@ namespace asbamboo\router\exception;
  */
 class NotFoundRouteException extends \InvalidArgumentException implements RouterExceptionInterface
 {
-
+    public function __construct(string $message="不好意思，你访问的资源不存在。", \Exception $previous = null)
+    {
+        parent::__construct($message, 404, $previous);
+    }
 }
