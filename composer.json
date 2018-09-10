@@ -1,0 +1,21 @@
+{
+    "name": "asbamboo/router",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "李春寅",
+            "email": "licy2013@aliyun.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "asbamboo/autoload": "^1.0",
+        "asbamboo/http": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}
