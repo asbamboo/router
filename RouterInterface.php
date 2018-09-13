@@ -13,6 +13,13 @@ use asbamboo\http\ResponseInterface;
 interface RouterInterface
 {
     /**
+     * 获取路由集合
+     *
+     * @return RouteCollectionInterface
+     */
+    public function getRouteCollection() : RouteCollectionInterface;
+
+    /**
      * 使用路由id生成url
      * $params如果在url路径中[asbamboo\routerRouteInterface::getPath()]存在的参数配置，那么因该与路径上面相应的参数做替换。
      * $params如果不是在url路径中[asbamboo\routerRouteInterface::getPath()]存在的参数配置，那么$params做未query_string生成url。

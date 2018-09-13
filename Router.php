@@ -28,6 +28,16 @@ class Router implements RouterInterface
     }
 
     /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::getRouteCollection()
+     */
+    public function getRouteCollection() : RouteCollectionInterface
+    {
+        return $this->RouteCollection;
+    }
+
+    /**
      * {@inheritDoc}
      * @see \asbamboo\router\RouterInterface::generateUrl()
      */
