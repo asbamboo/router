@@ -57,7 +57,7 @@ class RouteCollection implements RouteCollectionInterface
     {
         $path           = $Request->getUri()->getPath();
         foreach($this->routes AS $id => $Route){
-            $test_ereg  = '@^' . preg_replace('@\{\w+\}@u', '\w+', $Route->getPath()) . '$@u';
+            $test_ereg  = '@^' . preg_replace('@\{[^/]+\}@u', '[^/]+', $Route->getPath()) . '$@u';
             $path       = rtrim($path, '/');
             if(preg_match($test_ereg, $path)){
                 $this->MatchedRoute = $Route;

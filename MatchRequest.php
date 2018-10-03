@@ -97,7 +97,7 @@ class MatchRequest implements MatchInterface
                 $v                  = $this->Request->getRequestParam($n);
             }
 
-            $call_params[$n]    = $v;
+            $call_params[$n]    = urldecode($v);
         }
 
         /*

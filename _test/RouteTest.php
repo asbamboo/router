@@ -13,7 +13,7 @@ class RouteTest extends TestCase
 {
     public function getMainData()
     {
-        yield ['id' => 'test_id', 'path' => '/', 'callback' => function($p1){}, 'default_params' => null, 'options' => null ];
+        yield ['id' => 'test_id', 'path' => '/', 'callback' => function($p1){}, 'default_params' => ['a'=>11], 'options' => null ];
     }
 
     /**
