@@ -2,6 +2,7 @@
 namespace asbamboo\router;
 
 use asbamboo\http\ServerRequestInterface;
+use asbamboo\http\ResponseInterface;
 
 /**
  * 路由管理器
@@ -27,6 +28,16 @@ class Router implements RouterInterface
     }
 
     /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::getRouteCollection()
+     */
+    public function getRouteCollection() : RouteCollectionInterface
+    {
+        return $this->RouteCollection;
+    }
+
+    /**
      * {@inheritDoc}
      * @see \asbamboo\router\RouterInterface::generateUrl()
      */
@@ -37,8 +48,8 @@ class Router implements RouterInterface
          */
         $Route          = $this->RouteCollection->get($route_id);
         $path           = $Route->getPath();
-        $default_params = $Route->getDefaultParams();
-        $params         = array_merge($default_params, $params);
+        $default_params = (array)$Route->getDefaultParams();
+        $params         = array_merge($default_params, (array)$params);
 
         /*
          * 将url路径中的变量替换
@@ -61,13 +72,13 @@ class Router implements RouterInterface
                 continue;
             }
         }
-        $path           = implode('/', $explode_path);
+        $path           = implode('/', $explode_path)?:'/';
 
         /*
          * 生成url
          */
         $query_string   = http_build_query($params);
-        $url            = $path . '?' . $query_string;
+        $url            = $path . ( $query_string ? '?' . $query_string : '');
 
         /*
          * 返回
@@ -78,11 +89,11 @@ class Router implements RouterInterface
     /**
      *
      * {@inheritDoc}
-     * @see \asbamboo\router\RouterInterface::getRoute()
+     * @see \asbamboo\router\RouterInterface::matchRequest()
      */
-    public function getRoute(ServerRequestInterface $request) : RouteInterface
+    public function matchRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $path               = $request->getUri()->getPath();
-        return $this->RouteCollection->getByPath($path);
+        $matchRequest   = $this->RouteCollection->matchRequest($request);
+        return $matchRequest->execute();
     }
 }

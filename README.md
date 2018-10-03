@@ -1,13 +1,5 @@
-* 依赖 asbamboo\autoload\Autoload;
-* 依赖 asbamboo\http\RequestInterface;
+# router
 
-* Router 路由管理器作用
-    * 生成url
-    * 解析http请求返回路由单元
-    
-* Route 路由单元
+* asbamboo 路由模块
 
-* RouteCollection 路由集合
-
-* LoaderInterface 路由集合加载器
-    * LoaderByArray 路由集合加载器(用数组作为加载资源。)
+* [文档](http://docs.asbamboo.com/router)

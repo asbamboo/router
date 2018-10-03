@@ -5,6 +5,8 @@ use asbamboo\router\exception\NotFoundRouteException;
 use PHPUnit\Framework\TestCase;
 use asbamboo\router\RouteCollection;
 use asbamboo\router\Route;
+use asbamboo\http\ServerRequest;
+use asbamboo\router\MatchRequest;
 /**
  * test RouterCollection
  * @author 李春寅 <licy2013@aliyun.com>
@@ -17,13 +19,6 @@ class RouteCollectionTest extends TestCase
         $this->expectException(NotFoundRouteException::class);
         $RouterCollection   = new RouteCollection();
         $RouterCollection->get('route_id');
-    }
-
-    public function testGetByPathNotFoundException()
-    {
-        $this->expectException(NotFoundRouteException::class);
-        $RouterCollection   = new RouteCollection();
-        $RouterCollection->getByPath('route_path');
     }
 
     public function testMain()
@@ -40,7 +35,9 @@ class RouteCollectionTest extends TestCase
         $this->assertCount(1, $RouterCollection->getIterator());
         $this->assertEquals(1, $RouterCollection->count());
         $this->assertEquals($Route, $RouterCollection->get($id));
-        $this->assertEquals($Route, $RouterCollection->getByPath('/path/p1/p2/p3/'));
 
+        $_SERVER['REQUEST_URI']   = '/path/param1/2/3/';
+        $Request            = new ServerRequest();
+        $this->assertInstanceOf(MatchRequest::class, $RouterCollection->matchRequest($Request));
     }
 }

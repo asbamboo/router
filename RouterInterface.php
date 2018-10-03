@@ -2,6 +2,7 @@
 namespace asbamboo\router;
 
 use asbamboo\http\ServerRequestInterface;
+use asbamboo\http\ResponseInterface;
 
 /**
  * 路由管理器
@@ -11,6 +12,13 @@ use asbamboo\http\ServerRequestInterface;
  */
 interface RouterInterface
 {
+    /**
+     * 获取路由集合
+     *
+     * @return RouteCollectionInterface
+     */
+    public function getRouteCollection() : RouteCollectionInterface;
+
     /**
      * 使用路由id生成url
      * $params如果在url路径中[asbamboo\routerRouteInterface::getPath()]存在的参数配置，那么因该与路径上面相应的参数做替换。
@@ -24,11 +32,9 @@ interface RouterInterface
     public function generateUrl(string $route_id, array $params = null) : string;
 
     /**
-     * 获取一个和当前请求匹配的路由
+     * 匹配一个request请求, 并且执行路由的callback方法后，返回一个Response信息。
      *
      * @param ServerRequestInterface $request
-     *
-     * @return RouteInterface
      */
-    public function getRoute(ServerRequestInterface $request) : RouteInterface;
+    public function matchRequest(ServerRequestInterface $request): ResponseInterface;
 }
