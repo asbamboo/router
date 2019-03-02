@@ -55,7 +55,18 @@ class RouteCollection implements RouteCollectionInterface
      */
     public function matchRequest(ServerRequestInterface $Request) : MatchInterface
     {
+        $script_name    = $Request->getServerParams()['SCRIPT_NAME'] ?? "";
         $path           = $Request->getUri()->getPath();
+
+        if(strpos($path, $script_name) === 0){
+            $path   = substr($path, strlen($script_name));
+        }else{
+            $script_path    = dirname($script_name);
+            if(strpos($path, $script_path) === 0){
+                $path   = substr($path, strlen($script_path));
+            }
+        }
+
         foreach($this->routes AS $id => $Route){
             $test_ereg  = '@^' . preg_replace('@\{[^/]+\}@u', '[^/]+', $Route->getPath()) . '$@u';
             $path       = rtrim($path, '/');
