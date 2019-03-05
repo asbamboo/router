@@ -8,9 +8,12 @@ use asbamboo\http\ServerRequestInterface;
  * 通过服务端收到的http请求，匹配路由集合。
  *  - 可以获取当前匹配到的路由
  *  - 可以执行当前匹配，得到一个http response结果
+ *  - 将在2.0版本中删除，类似的功能见在Router::callRoute()方法。
  *
  * @author 李春寅 <licy2013@aliyun.com>
  * @since 2018年7月2日
+ *
+ * @deprecated
  */
 class MatchRequest implements MatchInterface
 {

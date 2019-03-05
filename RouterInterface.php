@@ -34,7 +34,27 @@ interface RouterInterface
     /**
      * 匹配一个request请求, 并且执行路由的callback方法后，返回一个Response信息。
      *
+     * @deprecated 本方法将在2.0版本删除， 使用match+call方法替代
      * @param ServerRequestInterface $request
      */
-    public function matchRequest(ServerRequestInterface $request): ResponseInterface;
+    public function matchRequest(ServerRequestInterface $Request): ResponseInterface;
+
+    /**
+     * 通过 $Request 参数匹配一个 route
+     *
+     * @param ServerRequestInterface $request
+     * @return RouteInterface
+     * @throws \asbamboo\router\exception\NotFoundRouteException
+     */
+    public function match(ServerRequestInterface $request): RouteInterface;
+
+    /**
+     * 回调route
+     *  - 应该通过 call_user_func_array($Route, $Request) 返回一个Response
+     *
+     * @param RouteInterface $route
+     * @param ServerRequestInterface $Request
+     * @return ResponseInterface
+     */
+    public function call(RouteInterface $Route, ServerRequestInterface $Request) : ResponseInterface;
 }
