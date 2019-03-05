@@ -49,6 +49,39 @@ class RouteCollection implements RouteCollectionInterface
     }
 
     /**
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouteCollectionInterface::get()
+     */
+    public function get(string $id): RouteInterface
+    {
+        if(!$this->has($id)){
+            throw new NotFoundRouteException(sprintf("没有找到与唯一标识符是[%s]的路由", $id));
+        }
+        return $this->routes[$id];
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Countable::count()
+     */
+    public function count()
+    {
+        return count($this->routes);
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouteCollectionInterface::has()
+     */
+    public function has(string $id): bool
+    {
+        return isset($this->routes[$id]);
+    }
+
+    /**
+     * @deprecated
      *
      * {@inheritDoc}
      * @see \asbamboo\router\RouteCollectionInterface::getByPath()
@@ -80,45 +113,13 @@ class RouteCollection implements RouteCollectionInterface
     }
 
     /**
-     * 返回匹配到的路由
-     *  - 当返回结果是null的时候，可能是应为没有执行matchRequest方法
+     * @deprecated
      *
-     * @return \asbamboo\router\Route
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouteCollectionInterface::getMatchedRoute()
      */
     public function getMatchedRoute() : ?RouteInterface
     {
         return $this->MatchedRoute;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see \asbamboo\router\RouteCollectionInterface::get()
-     */
-    public function get(string $id): RouteInterface
-    {
-        if(!$this->has($id)){
-            throw new NotFoundRouteException(sprintf("没有找到与唯一标识符是[%s]的路由", $id));
-        }
-        return $this->routes[$id];
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Countable::count()
-     */
-    public function count()
-    {
-        return count($this->routes);
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \asbamboo\router\RouteCollectionInterface::has()
-     */
-    public function has(string $id): bool
-    {
-        return isset($this->routes[$id]);
     }
 }

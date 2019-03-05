@@ -8,6 +8,7 @@ use asbamboo\router\Router;
 use asbamboo\http\ServerRequest;
 use asbamboo\http\Response;
 use asbamboo\http\Stream;
+use asbamboo\router\RouteInterface;
 
 /**
  * test 路由管理器
@@ -42,6 +43,27 @@ class RouterTest extends TestCase
 
         $this->assertEquals('/path/param1/2/3?query1=query1&query2=query2', $url);
         return $Router;
+    }
+
+    /**
+     * @depends testGenerateUrl
+     */
+    public function testMatch(Router $Router)
+    {
+        $Request    = new ServerRequest();
+        $Route      = $Router->match($Request);
+        $this->assertInstanceOf(RouteInterface::class, $Route);
+    }
+
+    /**
+     * @depends testGenerateUrl
+     */
+    public function testCall(Router $Router)
+    {
+        $Request    = new ServerRequest();
+        $Route      = $Router->match($Request);
+        $Response   = $Router->call($Route, $Request);
+        $this->assertEquals('testRouter.', $Response->getBody());
     }
 
     /**

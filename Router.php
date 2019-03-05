@@ -3,6 +3,7 @@ namespace asbamboo\router;
 
 use asbamboo\http\ServerRequestInterface;
 use asbamboo\http\ResponseInterface;
+use asbamboo\router\exception\NotFoundRouteException;
 
 /**
  * 路由管理器
@@ -89,11 +90,98 @@ class Router implements RouterInterface
     /**
      *
      * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::match()
+     */
+    public function match(ServerRequestInterface $Request): RouteInterface
+    {
+        $script_name    = $Request->getServerParams()['SCRIPT_NAME'] ?? "";
+        $script_path    = dirname($script_name);
+        $path           = $Request->getUri()->getPath();
+        if($script_path != '/' && strpos($path, $script_name) === 0){
+            $path   = substr($path, strlen($script_name));
+        }else if($script_path != '/' && strpos($path, $script_path) === 0){
+            $path   = substr($path, strlen($script_path));
+        }
+
+        foreach($this->RouteCollection->getIterator() AS $id => $Route){
+            $test_ereg  = '@^' . preg_replace('@\{[^/]+\}@u', '[^/]+', $Route->getPath()) . '$@u';
+            $path       = rtrim($path, '/');
+            if(preg_match($test_ereg, $path)){
+                return $Route;
+            }
+        }
+
+        throw new NotFoundRouteException(sprintf("没有找到与路径[%s]匹配的路由", $path));
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::call()
+     */
+    public function call(RouteInterface $Route, ServerRequestInterface $Request) : ResponseInterface
+    {
+        /*
+         * 路由path中的参数
+         */
+        $param_parse_by_route_paths = [];
+        $route_path                 = $Route->getPath();
+        $request_path               = $Request->getUri()->getPath();
+        $explode_route_path         = explode('/', $route_path);
+        $explode_request_path       = explode('/', $request_path);
+        foreach($explode_route_path AS $index => $item){
+            if(preg_match('@^\{(\w+)\}$@u', $item, $match)){
+                $param_name                                 = $match[1];
+                $param_value                                = isset($explode_request_path[$index]) ? $explode_request_path[$index] : null;
+                $param_parse_by_route_paths[$param_name]    = $param_value;
+            }
+        }
+
+        /*
+         * 默认的参数
+         */
+        $default_params = $Route->getDefaultParams();
+
+        /*
+         * 真实的用于路由的回调函数的参数
+         */
+        $callback       = $Route->getCallback();
+        $call_params    = [];
+        if(is_array($callback)){
+            $r  = new \ReflectionMethod(implode('::', [get_class($callback[0]), $callback[1]]));
+        }else{
+            $r  = new \ReflectionFunction($callback);
+        }
+        $ref_params    = $r->getParameters();
+        foreach($ref_params AS $ref_param){
+            $n                  = $ref_param->getName();
+            $v                  = $ref_param->isDefaultValueAvailable() ? $ref_param->getDefaultValue() : null;
+            $v                  = isset( $default_params[$n] ) ? $default_params[$n] : $v;
+
+            if(isset( $param_parse_by_route_paths[$n] )){
+                $v                  = $param_parse_by_route_paths[$n];
+            }else if($Request->getRequestParam($n) !== null){
+                $v                  = $Request->getRequestParam($n);
+            }
+
+            $call_params[$n]    = urldecode($v);
+        }
+
+        /*
+         * 执行路由对应的回调函数
+         */
+        return call_user_func_array($callback, $call_params);
+    }
+
+    /**
+     * @deprecated
+     *
+     * {@inheritDoc}
      * @see \asbamboo\router\RouterInterface::matchRequest()
      */
-    public function matchRequest(ServerRequestInterface $request): ResponseInterface
+    public function matchRequest(ServerRequestInterface $Request): ResponseInterface
     {
-        $matchRequest   = $this->RouteCollection->matchRequest($request);
+        $matchRequest   = $this->RouteCollection->matchRequest($Request);
         return $matchRequest->execute();
     }
 }
