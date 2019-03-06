@@ -53,6 +53,15 @@ class RouterTest extends TestCase
         $Request    = new ServerRequest();
         $Route      = $Router->match($Request);
         $this->assertInstanceOf(RouteInterface::class, $Route);
+        return $Router;
+    }
+
+    /**
+     * @depends testMatch
+     */
+    public function testGetCurrentMatchedRouteId(Router $Router)
+    {
+        $this->assertEquals("test_id", $Router->getCurrentMatchedRouteId());
     }
 
     /**

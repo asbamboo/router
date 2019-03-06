@@ -49,6 +49,13 @@ interface RouterInterface
     public function match(ServerRequestInterface $request): RouteInterface;
 
     /**
+     * 返回最后一次使用match方法匹配到的route的id
+     *
+     * @return string
+     */
+    public function getCurrentMatchedRouteId() : ?string;
+
+    /**
      * 回调route
      *  - 应该通过 call_user_func_array($Route, $Request) 返回一个Response
      *

@@ -20,6 +20,13 @@ class Router implements RouterInterface
     private $RouteCollection;
 
     /**
+     * 最后匹配的route id
+     *
+     * @var string
+     */
+    private $last_matched_route_id;
+
+    /**
      *
      * @param RouteCollectionInterface $RouteCollection
      */
@@ -107,11 +114,22 @@ class Router implements RouterInterface
             $test_ereg  = '@^' . preg_replace('@\{[^/]+\}@u', '[^/]+', $Route->getPath()) . '$@u';
             $path       = rtrim($path, '/');
             if(preg_match($test_ereg, $path)){
+                $this->last_matched_route_id    = $Route->getId();
                 return $Route;
             }
         }
 
         throw new NotFoundRouteException(sprintf("没有找到与路径[%s]匹配的路由", $path));
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::getCurrentMatchedRouteId()
+     */
+    public function getCurrentMatchedRouteId() : ?string
+    {
+        return $this->last_matched_route_id;
     }
 
     /**
