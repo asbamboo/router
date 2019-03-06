@@ -182,7 +182,7 @@ class Router implements RouterInterface
                 $v                  = $Request->getRequestParam($n);
             }
 
-            $call_params[$n]    = urldecode($v);
+            $call_params[$n]    = is_string($v) ? urldecode($v) : $v;
         }
 
         /*
