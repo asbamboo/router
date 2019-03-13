@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use asbamboo\router\RouteCollection;
 use asbamboo\router\Route;
 use asbamboo\http\ServerRequest;
-use asbamboo\router\MatchRequest;
 /**
  * test RouterCollection
  * @author 李春寅 <licy2013@aliyun.com>
@@ -35,9 +34,5 @@ class RouteCollectionTest extends TestCase
         $this->assertCount(1, $RouterCollection->getIterator());
         $this->assertEquals(1, $RouterCollection->count());
         $this->assertEquals($Route, $RouterCollection->get($id));
-
-        $_SERVER['REQUEST_URI']   = '/path/param1/2/3/';
-        $Request            = new ServerRequest();
-        $this->assertInstanceOf(MatchRequest::class, $RouterCollection->matchRequest($Request));
     }
 }

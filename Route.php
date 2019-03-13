@@ -13,6 +13,18 @@ class Route implements RouteInterface
      *
      * @var string
      */
+    protected $scheme;
+
+    /**
+     *
+     * @var string
+     */
+    protected $host;
+
+    /**
+     *
+     * @var string
+     */
     protected $path;
 
     /**
@@ -49,6 +61,19 @@ class Route implements RouteInterface
         $this->default_params   = $default_params;
         $this->options          = $options;
 
+        if(isset($this->options['host'])){
+            $this->host   = $this->options['host'];
+        }elseif(isset($_SERVER['HTTP_HOST'])){
+            $this->host = $_SERVER['HTTP_HOST'];
+        }
+
+        if(!empty($this->host)){
+            if(isset($this->options['scheme'])){
+                $this->scheme   = $this->options['scheme'];
+            }elseif(isset($_SERVER['REQUEST_SCHEME'])){
+                $this->scheme   = $_SERVER['REQUEST_SCHEME'];
+            }
+        }
     }
 
     /**
@@ -59,6 +84,27 @@ class Route implements RouteInterface
     public function getId() : string
     {
         return $this->id;
+    }
+
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouteInterface::getScheme()
+     */
+    public function getScheme() : string
+    {
+        return (string) $this->scheme;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouteInterface::getHost()
+     */
+    public function getHost() : string
+    {
+        return (string) $this->host;
     }
 
     /**

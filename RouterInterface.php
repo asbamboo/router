@@ -20,7 +20,7 @@ interface RouterInterface
     public function getRouteCollection() : RouteCollectionInterface;
 
     /**
-     * 使用路由id生成url
+     * 使用路由id生成url (url不带scheme 和 host部分)
      * $params如果在url路径中[asbamboo\routerRouteInterface::getPath()]存在的参数配置，那么因该与路径上面相应的参数做替换。
      * $params如果不是在url路径中[asbamboo\routerRouteInterface::getPath()]存在的参数配置，那么$params做未query_string生成url。
      *
@@ -32,12 +32,11 @@ interface RouterInterface
     public function generateUrl(string $route_id, array $params = null) : string;
 
     /**
-     * 匹配一个request请求, 并且执行路由的callback方法后，返回一个Response信息。
+     * 使用路由id生成url (应该在generateUrl基础上，添加scheme和host)
      *
-     * @deprecated 本方法将在2.0版本删除， 使用match+call方法替代
-     * @param ServerRequestInterface $request
+     * @return string
      */
-    public function matchRequest(ServerRequestInterface $Request): ResponseInterface;
+    public function generateAbsoluteUrl(string $route_id, array $params = null) : string;
 
     /**
      * 通过 $Request 参数匹配一个 route

@@ -74,14 +74,4 @@ class RouterTest extends TestCase
         $Response   = $Router->call($Route, $Request);
         $this->assertEquals('testRouter.', $Response->getBody());
     }
-
-    /**
-     * @depends testGenerateUrl
-     */
-    public function testMatchRequest(Router $Router)
-    {
-        $Request                = new ServerRequest();
-        $Response               = $Router->matchRequest($Request);
-        $this->assertEquals('testRouter.', $Response->getBody());
-    }
 }

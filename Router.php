@@ -97,6 +97,20 @@ class Router implements RouterInterface
     /**
      *
      * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::generateAbsoluteUrl()
+     */
+    public function generateAbsoluteUrl(string $route_id, array $params = null) : string
+    {
+        $Route          = $this->RouteCollection->get($route_id);
+        $scheme         = $Route->getScheme();
+        $host           = $Route->getHost();
+        $url            = implode('//', [$scheme, $host]) . $this->generateUrl($route_id, $params);
+        return $url;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
      * @see \asbamboo\router\RouterInterface::match()
      */
     public function match(ServerRequestInterface $Request): RouteInterface
@@ -189,17 +203,5 @@ class Router implements RouterInterface
          * 执行路由对应的回调函数
          */
         return call_user_func_array($callback, $call_params);
-    }
-
-    /**
-     * @deprecated
-     *
-     * {@inheritDoc}
-     * @see \asbamboo\router\RouterInterface::matchRequest()
-     */
-    public function matchRequest(ServerRequestInterface $Request): ResponseInterface
-    {
-        $matchRequest   = $this->RouteCollection->matchRequest($Request);
-        return $matchRequest->execute();
     }
 }

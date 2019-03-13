@@ -13,7 +13,7 @@ class RouteTest extends TestCase
 {
     public function getMainData()
     {
-        yield ['id' => 'test_id', 'path' => '/', 'callback' => function($p1){}, 'default_params' => ['a'=>11], 'options' => null ];
+        yield ['id' => 'test_id', 'path' => '/', 'callback' => function($p1){}, 'default_params' => ['a'=>11], 'options' => ['scheme' => 'https', 'host' => 'test_host']];
     }
 
     /**
@@ -24,6 +24,8 @@ class RouteTest extends TestCase
         $Route  = new Route($id, $path, $callback, $default_params, $options);
 
         $this->assertEquals($id, $Route->getId());
+        $this->assertEquals($options['scheme'], $Route->getScheme());
+        $this->assertEquals($options['host'], $Route->getHost());
         $this->assertEquals(rtrim($path, '/'), $Route->getPath());
         $this->assertEquals($callback, $Route->getCallback());
         $this->assertEquals($default_params, $Route->getDefaultParams());
