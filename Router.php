@@ -104,7 +104,7 @@ class Router implements RouterInterface
         $Route          = $this->RouteCollection->get($route_id);
         $scheme         = $Route->getScheme();
         $host           = $Route->getHost();
-        $url            = implode('//', [$scheme, $host]) . $this->generateUrl($route_id, $params);
+        $url            = implode('://', [$scheme, $host]) . $this->generateUrl($route_id, $params);
         return $url;
     }
 
