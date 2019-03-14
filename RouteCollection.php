@@ -2,7 +2,6 @@
 namespace asbamboo\router;
 
 use asbamboo\router\exception\NotFoundRouteException;
-use asbamboo\http\ServerRequestInterface;
 
 /**
  * 路由集合
@@ -78,48 +77,5 @@ class RouteCollection implements RouteCollectionInterface
     public function has(string $id): bool
     {
         return isset($this->routes[$id]);
-    }
-
-    /**
-     * @deprecated
-     *
-     * {@inheritDoc}
-     * @see \asbamboo\router\RouteCollectionInterface::getByPath()
-     */
-    public function matchRequest(ServerRequestInterface $Request) : MatchInterface
-    {
-        $script_name    = $Request->getServerParams()['SCRIPT_NAME'] ?? "";
-        $script_path    = dirname($script_name);
-        $path           = $Request->getUri()->getPath();
-        if($script_path != '/' && strpos($path, $script_name) === 0){
-            $path   = substr($path, strlen($script_name));
-        }else if($script_path != '/' && strpos($path, $script_path) === 0){
-            $path   = substr($path, strlen($script_path));
-        }
-
-        foreach($this->routes AS $id => $Route){
-            $test_ereg  = '@^' . preg_replace('@\{[^/]+\}@u', '[^/]+', $Route->getPath()) . '$@u';
-            $path       = rtrim($path, '/');
-            if(preg_match($test_ereg, $path)){
-                $this->MatchedRoute = $Route;
-            }
-        }
-
-        if($this->MatchedRoute === null){
-            throw new NotFoundRouteException(sprintf("没有找到与路径[%s]匹配的路由", $path));
-        }
-
-        return new MatchRequest($this->MatchedRoute, $Request);
-    }
-
-    /**
-     * @deprecated
-     *
-     * {@inheritDoc}
-     * @see \asbamboo\router\RouteCollectionInterface::getMatchedRoute()
-     */
-    public function getMatchedRoute() : ?RouteInterface
-    {
-        return $this->MatchedRoute;
     }
 }

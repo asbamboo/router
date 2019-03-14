@@ -20,6 +20,13 @@ class Router implements RouterInterface
     private $RouteCollection;
 
     /**
+     * 最后匹配的route id
+     *
+     * @var string
+     */
+    private $last_matched_route_id;
+
+    /**
      *
      * @param RouteCollectionInterface $RouteCollection
      */
@@ -90,6 +97,20 @@ class Router implements RouterInterface
     /**
      *
      * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::generateAbsoluteUrl()
+     */
+    public function generateAbsoluteUrl(string $route_id, array $params = null) : string
+    {
+        $Route          = $this->RouteCollection->get($route_id);
+        $scheme         = $Route->getScheme();
+        $host           = $Route->getHost();
+        $url            = implode('://', [$scheme, $host]) . $this->generateUrl($route_id, $params);
+        return $url;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
      * @see \asbamboo\router\RouterInterface::match()
      */
     public function match(ServerRequestInterface $Request): RouteInterface
@@ -107,11 +128,22 @@ class Router implements RouterInterface
             $test_ereg  = '@^' . preg_replace('@\{[^/]+\}@u', '[^/]+', $Route->getPath()) . '$@u';
             $path       = rtrim($path, '/');
             if(preg_match($test_ereg, $path)){
+                $this->last_matched_route_id    = $Route->getId();
                 return $Route;
             }
         }
 
         throw new NotFoundRouteException(sprintf("没有找到与路径[%s]匹配的路由", $path));
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\router\RouterInterface::getCurrentMatchedRouteId()
+     */
+    public function getCurrentMatchedRouteId() : ?string
+    {
+        return $this->last_matched_route_id;
     }
 
     /**
@@ -164,24 +196,12 @@ class Router implements RouterInterface
                 $v                  = $Request->getRequestParam($n);
             }
 
-            $call_params[$n]    = urldecode($v);
+            $call_params[$n]    = is_string($v) ? urldecode($v) : $v;
         }
 
         /*
          * 执行路由对应的回调函数
          */
         return call_user_func_array($callback, $call_params);
-    }
-
-    /**
-     * @deprecated
-     *
-     * {@inheritDoc}
-     * @see \asbamboo\router\RouterInterface::matchRequest()
-     */
-    public function matchRequest(ServerRequestInterface $Request): ResponseInterface
-    {
-        $matchRequest   = $this->RouteCollection->matchRequest($Request);
-        return $matchRequest->execute();
     }
 }

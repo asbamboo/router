@@ -10,6 +10,18 @@ namespace asbamboo\router;
 interface RouteInterface
 {
     /**
+     * uri scheme
+     *
+     * @see https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
+     */
+    public function getScheme() : string;
+
+    /**
+     * url host 端口号也应该一起被返回
+     */
+    public function getHost() : string;
+
+    /**
      * 路由的唯一标识符
      * @return string
      */
