@@ -25,14 +25,21 @@ class Router implements RouterInterface
      * @var string
      */
     private $last_matched_route_id;
+    
+    /**
+     * 
+     * @var ServerRequestInterface
+     */
+    private $ServerRequest;
 
     /**
      *
      * @param RouteCollectionInterface $RouteCollection
      */
-    public function __construct(RouteCollectionInterface $RouteCollection)
+    public function __construct(RouteCollectionInterface $RouteCollection, ServerRequestInterface $ServerRequest)
     {
         $this->RouteCollection    = $RouteCollection;
+        $this->ServerRequest      = $ServerRequest;
     }
 
     /**
@@ -88,6 +95,15 @@ class Router implements RouterInterface
         $query_string   = http_build_query($params);
         $url            = $path . ( $query_string ? '?' . $query_string : '');
 
+        /*
+         * 入口文件如果不是web根目录，需要补全path
+         */
+        $script_name    = $this->ServerRequest->getServerParams()['SCRIPT_NAME'] ?? "";
+        $script_path    = dirname($script_name);
+        if($script_path != '/'){
+            $path   = $script_path . $path;
+        }
+        
         /*
          * 返回
          */
