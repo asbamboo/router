@@ -38,10 +38,12 @@ class RouterTest extends TestCase
         $RouteCollection   = new RouteCollection();
         $RouteCollection->add($Route);
 
-        $Router             = new Router($RouteCollection);
+        $Request            = new ServerRequest();
+        
+        $Router             = new Router($RouteCollection, $Request);
         $url                = $Router->generateUrl($id,  ['p1' => 'param1', 'query1' => 'query1', 'query2' => 'query2']);
 
-        $this->assertEquals('/path/param1/2/3?query1=query1&query2=query2', $url);
+        $this->assertContains('/path/param1/2/3?query1=query1&query2=query2', $url);
         return $Router;
     }
 
@@ -60,7 +62,9 @@ class RouterTest extends TestCase
         $RouteCollection   = new RouteCollection();
         $RouteCollection->add($Route);
 
-        $Router             = new Router($RouteCollection);
+        $Request            = new ServerRequest();
+        
+        $Router             = new Router($RouteCollection, $Request);
         $url                = $Router->generateUrl($id,  ['p1' => 'param1', 'query1' => 'query1', 'query2' => 'query2']);
 
         $this->assertEquals('/path/param1/2/3?query1=query1&query2=query2', $url);
