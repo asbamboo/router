@@ -72,6 +72,8 @@ class Route implements RouteInterface
                 $this->scheme   = $this->options['scheme'];
             }elseif(isset($_SERVER['REQUEST_SCHEME'])){
                 $this->scheme   = $_SERVER['REQUEST_SCHEME'];
+            }elseif(isset($_SERVER['HTTP_REQUEST_SCHEME'])){
+                $this->scheme   = $_SERVER['HTTP_REQUEST_SCHEME'];
             }else{
                 $this->scheme   = "http";
             }
